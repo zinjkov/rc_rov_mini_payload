@@ -26,9 +26,14 @@ void step_motor::init()
 
 }
 
+int8_t step_motor::get() {
+	return m_val;
+}
+
 
 void step_motor::write(int8_t power)
-{
+{	
+	m_val = power;
 	if (power > 0) {
 		//SoftPWMSet(m_pin_left, 0);
 		//SoftPWMSet(m_pin_right, 0);
@@ -42,8 +47,8 @@ void step_motor::write(int8_t power)
 		digitalWrite(m_pin_right, HIGH);
 	}
 	else {
-		//		SoftPWMSet(m_pin_left, 150);
-		//	SoftPWMSet(m_pin_right, 0);
+		//SoftPWMSet(m_pin_left, 150);
+		//SoftPWMSet(m_pin_right, 0);
 		digitalWrite(m_pin_left, LOW);
 		digitalWrite(m_pin_right, LOW);
 	}

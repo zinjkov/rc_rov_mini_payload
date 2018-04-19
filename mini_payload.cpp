@@ -39,12 +39,16 @@ void rc_rov::mini_payload::write()
 		m_magnet.write(m_control.magnet);
 		m_acoustics.write(m_control.acoustics);
 		m_manipulator.write(m_control);
+   digitalWrite(LED_BUILTIN, HIGH);
 	}
 	m_acoustics.run();
 }
 
 void rc_rov::mini_payload::commit()
 {
+  for (int i = 0; i < motor_cfg::size; i++) {
+      m_telimetry.twisting_motors_feedback[i] = m_motors.get(i);
+  }
 	m_telimetry.mini_communicator_feedback = 1;
 	m_telimetry.magnet = m_magnet.get();
 	m_telimetry.acoustics = m_acoustics.get();
@@ -53,12 +57,12 @@ void rc_rov::mini_payload::commit()
 
 void rc_rov::mini_payload::send()
 {
-	if (m_timeout.elapsed() > 100) {
+	if (m_timeout.elapsed() > 200) {
 		m_timeout.stop();
 		uint8_t buffer[30];
 		uint8_t size = m_telimetry.serialize(buffer);
 		Serial.write(buffer, size);
-		m_timeout.start();
+		m_timeout.start();    
 	}
 }
 
