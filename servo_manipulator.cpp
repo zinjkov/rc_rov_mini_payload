@@ -19,15 +19,34 @@ void servo_manipulator::init()
 
 void servo_manipulator::write(const rov_types::rov_mini_control & control)
 {
-	m_val = constrain(control.manipulator, -2, 2);
-	m_angle += m_val;
-	m_angle = constrain(m_angle, 0, 180);
-	m_man.write(m_angle);
+	if (m_val != control.manipulator) {
+		m_timer.stop();
+		m_timer.start();
+		m_val = constrain(control.manipulator, -2, 2);
+		rotate();
+		m_is_updated = true;
+	}
+	if (m_timer.elapsed() > 30 || m_is_updated) {
+		rotate();
+		m_is_updated = false;
+		m_timer.stop();
+		m_timer.start();
+
+	}
+	
 
 }
 
 void servo_manipulator::commit(rov_types::rov_mini_telimetry & telimetry)
 {
 	telimetry.manipulator_feedback = m_angle;
+}
+
+void servo_manipulator::rotate()
+{
+	
+	m_angle += m_val;
+	m_angle = constrain(m_angle, 0, 180);
+	m_man.write(m_angle);
 }
 

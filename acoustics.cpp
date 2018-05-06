@@ -11,6 +11,9 @@ void acoustics::init()
 }
 
 void acoustics::write(int8_t open_close) {
+	if (open_close == 0) {
+		return;
+	}
 	if (open_close > 0) {
 		_needOpen = true;
 	}
