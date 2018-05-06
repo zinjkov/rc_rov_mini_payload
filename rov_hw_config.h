@@ -35,7 +35,7 @@ namespace rc_rov {
 	};
 	struct man_cfg {
 		enum : uint8_t {
-			pin = 11
+			pin = 16
 		};
 	};
 }

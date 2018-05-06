@@ -5,9 +5,11 @@ rc_rov::mini_payload mp;
 
 void setup() {
 	Serial.begin(115200);
-  delay(1000);
+	Serial1.begin(115200);
+	Serial.println("start");
+    delay(1000);
 	mp.init();
-  pinMode(LED_BUILTIN, OUTPUT);
+    pinMode(LED_BUILTIN, OUTPUT);
 }
 
 
@@ -16,6 +18,6 @@ void loop() {
 }
 
 
-void serialEvent() {
+void serialEvent1() {
 	mp.on_serial_event();
 }

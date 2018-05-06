@@ -19,6 +19,7 @@ void rc_rov::mini_payload::init()
 	m_motors.init();
 	m_magnet.init();
 	m_acoustics.init();
+	m_manipulator.init();
 
 	m_timeout.start();
 }
@@ -39,7 +40,7 @@ void rc_rov::mini_payload::write()
 		m_magnet.write(m_control.magnet);
 		m_acoustics.write(m_control.acoustics);
 		m_manipulator.write(m_control);
-   digitalWrite(LED_BUILTIN, HIGH);
+        digitalWrite(LED_BUILTIN, HIGH);
 	}
 	m_acoustics.run();
 }
@@ -53,6 +54,9 @@ void rc_rov::mini_payload::commit()
 	m_telimetry.magnet = m_magnet.get();
 	m_telimetry.acoustics = m_acoustics.get();
 	m_manipulator.commit(m_telimetry);
+	for (int i = 0; i < 4; i++) {
+		m_telimetry.twisting_motors_feedback[i] = m_motors.get(i);
+	}
 }
 
 void rc_rov::mini_payload::send()
@@ -61,7 +65,7 @@ void rc_rov::mini_payload::send()
 		m_timeout.stop();
 		uint8_t buffer[30];
 		uint8_t size = m_telimetry.serialize(buffer);
-		Serial.write(buffer, size);
+		Serial1.write(buffer, size);
 		m_timeout.start();    
 	}
 }
@@ -72,8 +76,8 @@ void rc_rov::mini_payload::on_serial_event()
 	rov_types::rov_mini_control hc;
 	size_t i = 0;
 	delay(1);
-	while (Serial.available()) {
-		packet[i++] = Serial.read();
+	while (Serial1.available()) {
+		packet[i++] = Serial1.read();
 	}
 	auto e = hc.deserialize(packet, i);
 	if (rov_types::serializable::check_for_success(e)) {
