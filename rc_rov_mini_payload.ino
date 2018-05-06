@@ -5,6 +5,7 @@ rc_rov::mini_payload mp;
 
 void setup() {
 	Serial.begin(115200);
+  delay(1000);
 	mp.init();
   pinMode(LED_BUILTIN, OUTPUT);
 }

@@ -20,7 +20,7 @@ void acoustics::write(int8_t open_close) {
 	if (open_close < 0) {
 		_needOpen = false;
 	}
-	open_close = m_val;
+	m_val = open_close;
 	_nextStep = millis() + STEP;
 	_count = -1;
 }

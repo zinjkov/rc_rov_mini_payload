@@ -21,6 +21,12 @@ namespace rc_rov {
 		}
 	}
 
+ int8_t Motors::get(int idx) {
+    if (idx < motor_cfg::size) {
+      return m_motors[idx].get();
+    }
+ }
+
 	void Motors::write(uint8_t idx, int8_t power)
 	{
 		if (idx < motor_cfg::size) {
